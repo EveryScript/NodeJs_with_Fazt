@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodeJS - <%= title_page %>
+    </title>
+    <!-- Include de un archivo EJS con los scripts y links necesarios -->
+    <%- include('./partials/head') %>
+</head>
+
+<body>
+    <!-- Include de contenido desde un archivo externo de EJS -->
+    <%- include('./partials/navigation') %>
+
+        <div class="vh-100 container d-flex justify-content-center align-items-center">
+            <div class="card bg-dark">
+                <h5 class="card-header text-center">Contact</h5>
+                <div class="card-body">
+                    <form class="text-start">
+                        <div class="mb-3">
+                            <label for="exampleInputEmail1" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="exampleInputEmail1"
+                                aria-describedby="emailHelp">
+                            <div id="emailHelp" class="form-text">We'll never share your email with anyone else.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="exampleInputPassword1" class="form-label">Message</label><br>
+                            <textarea name="" class="w-100" rows="4"></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">Send</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Include EJS - Footer -->
+        <%- include('./partials/footer') %>
+</body>
+
+</html>

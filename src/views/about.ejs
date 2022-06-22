@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NodeJS - <%= title_page %>
+    </title>
+    <!-- Include de un archivo EJS con los scripts y links necesarios -->
+    <%- include('./partials/head') %>
+</head>
+
+<body>
+    <!-- Include de contenido desde un archivo externo de EJS -->
+    <%- include('./partials/navigation') %>
+
+    <main class="vh-100 d-flex container text-center justify-content-center align-items-center">
+        <section>
+            <h1 class="display-1"> About </h1>
+            <p>
+                Lorem ipsum dolor sit amet consectetur adipisicing elit. Nemo cupiditate, perspiciatis aliquid velit
+                dolore quod distinctio architecto vitae! Vitae sit quos delectus odit odio dolorem, tenetur aliquam
+                optio ad dolor ullam earum molestias alias nostrum nihil ut excepturi accusantium quia totam est!
+                Perferendis laudantium earum quod perspiciatis esse porro natus minus, consectetur sequi nostrum
+                culpa magni libero nobis facere aliquid aspernatur dolor corporis dolore modi quaerat voluptate
+                accusantium. Voluptatibus maiores quisquam temporibus, eius omnis nobis ducimus amet facilis,
+                possimus harum quidem veniam sit. Saepe error illum vero corporis itaque hic consequuntur minima,
+                temporibus alias necessitatibus vitae accusamus nobis accusantium dolor modi veritatis mollitia
+                quibusdam repudiandae sint maxime eligendi quia. Ab id aliquam, voluptates enim perferendis
+                delectus, libero voluptatem dolorum eligendi hic aperiam? Maxime ducimus facere id saepe qui
+                voluptatem, corrupti consequuntur enim similique, nostrum architecto fugit distinctio fugiat ratione
+                rem veniam sint sapiente aliquid nobis nam vitae, quibusdam unde! Illo minus nam autem modi quia
+                fugit! Nobis dolorem, consequuntur assumenda neque autem ipsum officia numquam corrupti aliquid
+                aspernatur velit unde, laboriosam id doloremque voluptatum alias ea quas perspiciatis! Labore
+                adipisci vitae cumque aperiam maiores commodi illo impedit ducimus placeat soluta alias
+                perspiciatis, eum praesentium odit. Provident aperiam minima deserunt non.
+            </p>
+        </section>
+    </main>
+
+    <!-- Include EJS - Footer -->
+    <%- include('./partials/footer') %>
+</body>
+</html>
