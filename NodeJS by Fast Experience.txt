@@ -1,0 +1,154 @@
+*******    NODE JS - Experience web    *******
+Fuente: Fazt (https://www.youtube.com/watch?v=OVESuyVoPkI)
+
+Creación de un sitio usando NodeJS y algunas librerias de estilos
+
+INSTALACIÓN
+Dirigirse al sitio oficial de NodeJs, descargar e instalar la ultima version.
+
+
+INICIO DEL PROYECTO
+1. Crea de una carpeta en donde sea y abre con Visual Studio Code
+2. Ejecuta un CMD o una terminal de Visual Studio Code con un comando para crear el archivo package.json que contiene la "meta-información" del proyecto asi:
+	npm init -y		<-- Comando de creación directa del archivo
+3. El proyecto se desarrolla con Express (servidor), Morgan (visualizador de peticiones) y EJS (maquetador de sitios rápidos).
+	npm i express morgan ejs
+4. Tambien se instala Nodemon para el desarrollo (atento a cambios de codigo)
+	npm i nodemon -D		<-- Modulo disponible solo para el desarrollo
+5. Bien ... es necesario ahora una carpera 	/src 	   y dentro de ella un archivo: /index.js    en donde haremos una prueba de código javascript asi:
+	console.log("Hello World");
+6. Para ejecutar este archivo creamos un script en /package.json que ejecute el siguiente código:
+	"scripts": {
+	    "my_script": "nodemon src/index.js"
+	  },
+7. Luego ejecutamos el CMD para que nodemon esté atento a nuestro código escrito en /index.js asi:
+	npm run my_script
+8. Listo .. el proyecto va bien por ahora!
+
+
+
+USO DEL EXPRESS
+1. Express es un modulo que debe importarse en nuestro proyecto, hay 2 formas de incluirlo en nuestro /index.js:
+	A. Usando un require de la libreria
+		const express = require('express');
+	B. Importandolo como modulo
+		Se añade un nuevo objeto en /package.json 	  asi:	  "type": "module",		<-- Mejor debajo de "main": "index.js"
+		Ahora importar el modulo de express asi: 	import express from 'express'
+2. Una vez importado el módulo se define y de lanza una nueva aplicación de Express asi:
+	const app = express();
+	app.listen(3000);
+	console.log("El servidor de Express ha iniciado en el puerto 3000 !")
+3. Como Nodemon ha sido lanzado desde CMD, todo cambio en el código ya está guardado, abre un navegador y ve a la ruta http://localhost:3000
+4. Express es un servidor de rutas, por lo que cada ruta tiene una request y una response ... se añade asi ANTES DE	 app.listen(3000):
+	app.get('/', (req, res) => res.send('Esta es la respouesta de Express a la ruta vacia')) );
+
+
+
+
+USO DE EJS 
+EJS nos permite crear aechivos de HTML con funcionalidades de javascript para que Express los renderice en sus respuestas
+1. Primero se crea una carpeta de nombre /views en el directorio: /src para que contenga los archivos de tipo "ejs"
+2. Se crea un archivo "index.ejs" que contiene todo el código HTML para una vista del sitio
+3. Ahora se establece en la aplicación la ruta automática de las vistas asi:
+	a. Importar lo siguiente: 	import {dirname, join} from 'path';       import {fileURLToPath} from 'url';
+	b. Guardar la ruta en una constante asi:	const __dirname = dirname(fileURLToPath(import.meta.url));
+	c. Indicarle a Express que las vistas se encuentran en una dirección asi:	app.set('views', join(__dirname, 'views'));
+	d. Indicarle tambien que las páginas tienen un motor de busqueda "ejs" asi:       app.set('view engine', 'ejs');
+4. Ahora enviar el archivo renderizado hacia una ruta del servidor para que muestre el contenido de la página asi:
+	app.get('/', (req, res) => res.render('index') );		<-- Express ya entiende que 'index' termina en '.ejs'
+
+
+
+
+OPTIMIZANDO RUTAS DE EXPRESS
+1.Para organizar mejor las rutas se crea en /src   una carpeta llamada "routes" y se crea dentro un archivo "routes.js"
+2. En en archivo creado se crean las rutas igual que en express ... pero con algunos cambios
+	import { Router } from "express";
+	const router = Router();
+	router.get('/', (req, res) => res.render('index') );
+	router.get('/about', (req, res) => res.render('about') );
+	router.get('/contact', (req, res) => res.render('contact') );
+	export default router;
+3. Cada ruta corresponde a un archivo ".ejs"dentro de views. Una vez creado el archivo de rutas importarlo en index.js (archivo de configuración de Express)
+	import my_routes from './routes/routes.js';
+4. Ahora lo que queda es usarlo en la aplicación de Express antes de ser escuchada asi:
+	app.use(my_routes);
+
+
+
+PARAMETROS DESDE RUTAS DE EXPRESS Y RECEPCIÓN CON EJS 
+La idea es basicamente añadir junto a la ruta un objeto de Javascript para ser recibido como parametro en el archivo /index.ejs
+1. Crear el objeto justo aqui en el archivo de 	/routes.js   asi:
+	router.get('/about', (req, res) => res.render('about', { parameter: "Este es un parametro" }) );   <-- El parametro será enviado como objeto
+2. Recibirlo y leerlo en el archivo   /index.ejs   asi:
+	<h1> <%= parameter %> </h1>	<-- El parametro tiene una sintaxis específica 
+	
+
+
+
+INCLUDE DE CODIGO DE EJS EN OTRO EJS
+La idea es mostrar el contenido de un archivo de EJS en otro archivo de EJS con un "include"
+1. Crear un nuevo archivo de EJS "ejemplo.ejs" y rellenar con contenido de HTML
+2. Incluir el archivo en otro archivo de EJS asi:
+	<%- include('./ejemplo') %>		<-- Dentro de include se coloca la ubicación y el nombre del archivo sin ".ejs" no es necesario
+3. Listo! es todo
+
+
+
+
+AÑADIR LIBRERIAS Y ESTILOS CON EXPRESS
+Express lee los archivos "estaticos" ara ser accedidos desde cualquier interfaz visible, asi que los pasos son:
+1. Crear una nueva carpeta en /src con el nombre de "public" para todos los archivos estáticos
+2. Añadir el directorio de la carpeta a leer desde   /index.js   (Archivo con el contenido de Express) asi:
+	app.use(express.static(join(__dirname, 'public')))		<--  Debajo de app.use(my_routes) preferiblemente, ah y __dirname es la dirección global de archivos
+3. Ya que express esta leyendo TODOS los archivo de la carpeta "public" incluir cualquiera de ellos en EJS  asi:
+	<link rel="stylesheet" href="/mi_archivo.css">	<-- Se accede con la barra "/" a cualquier archivo
+
+
+
+
+
+DESPLEGAR LA APLICACIÓN CREADA EN HEROKU
+Heroku es un servicio que permite subir aplicaciones en la nube facilmente y gratis
+Bien, todo comienza asi:
+1. Crear una cuenta en Heroku (la mia es ... Email: everquispeticona@gmail.com	Password: fsicRAK5HTq3J3_y   ) ... confirmar la cuenta y loguearse ...
+2. En la ventana de Heroku presionar el boton de "Create new app"
+3. Darle un nombre a la aplicación que se va a subir para después terminar de crearla (La mia es... "nodejs-first-website-by-every")
+4. Ahora descargar Heroku CLI para ejecutarlo en el sistema operativo que tengas. La instalación es sencilla y rápida
+     Para comprobar la instalación de Heroku abrir un CMD y ejecutar:  "heroku --version"
+     Nota: si se ejecuta en la terminal de Visual Studio Code reiniciar el programa
+5. Crear ahora en la raiz del proyecto un archivo ".gitignore" que contenga los archivos que no son necesarios de subir: "node_modules"
+6. Ahora abir una terminal de GitBash en Visual Studio Code para ejecutar los siguientes comandos:
+	git init	<-- Iniciar el repositorio de Git
+	git status	<-- Verificar el estado del repositorio (se subirán todos los archivos excepto /node_modules)
+	git add .	<-- Añadir los archivos para ser subidos al repositorio (Verificar la seleccion con: "git status")
+	git commit -m "first commit of me" 	<-- Subir los archivos a Git para que Heroku los pueda desplegar
+7. Ahora ejecutar en otra terminal algunos comandos de Heroku asi:
+	heroku login	<-- Este comando te responde que debes presionar cualquier tecla excepto la "q" ... hazlo!
+8. Presiona enter y si no te logueaste debes loguearte ahora para usar Heroku en ésta terminal ... volvemos a la Terminal
+9. Una vez adentro ejecutar el siguiente comando 
+    IMPORTANTE: Es mejor si se ejecutan los siguientes comandos en una consola de GitBash
+	heroku git:remote -a nodejs-first-website-by-every		<-- Usar el mismo nombre de la aplicación 
+	git push heroku master		<-- Subir el código a Heroku, él se va a encargar de instalar los modulos ..
+10. Ajustar algunas partes del proyecto para que funcione en producción:
+	a) Añadir un script a /package.json  para dejar de usar "nodemon" en producción, el script se llama "start":
+		"start": "node src/index.js"
+	b) Colocar una alternativa al puerto que será asignado por Heroku en producción ... modificar ahora el archivo   /index.js
+		app.listen(3000 || process.env.PORT);		<-- Usar el puerto 3000 o un puerto asignado por HEROKU
+11. Ahora ejecutar "git status" solo para ver que algunos archivos han tenido cambios ... asi que hay que hacer un "commit" de Git con una nueva versión de los archivos
+      Se debe actualizar el repositorio asi: 
+	Ejecutar "git add . "          luego "git status"        luego: git commit -m "puertos actualizados"         y por ultimo: "git push heroku master"
+
+12. La aplicación podriaahora verse en:   https://nodejs-first-website-by-every.herokuapp.com/
+	
+		
+	
+
+
+
+
+(*) Dato curioso
+	* Algunos modulos instalados por NodeJS pueden ser usados solo en la etapa de desarrollo, estos se encuentran en package.json dentro del objeto "devDependencies"
+	* Se puede crear texto de lorem segun la cantidad de parabras  que se requiera. Ejemplo: "lorem100" significa 100 palabras
+
+
